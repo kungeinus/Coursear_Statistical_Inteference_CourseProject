@@ -1,0 +1,58 @@
+---
+title: "Course_Project_2"
+author: "Zhenkun Guo"
+date: "February 27, 2016"
+output: pdf_document
+---
+
+##1. Project Introduction
+
+The response is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods, (orange juice or ascorbic acid (a form of vitamin C and coded as VC).
+
+The goal of the analysis is to establish the relation between VC doses and tooth growth and compare the two methods of supplements (orange juice and ascorbic acid)
+
+###1.1. Load Necessary Library
+
+Tooth growth data is loaded from datasets library. Also ggplot2 library is loaded for ploting. Dose level is converted to factors for convenience.
+
+```{r}
+library(datasets)
+library(ggplot2)
+data<-ToothGrowth
+data$dose<-as.factor(data$dose)
+```
+
+##2. Basic Analysis
+
+The mean, median, standard deviation and variance are calculated for different supplement methods and different doses
+
+```{r}
+data_summary<-aggregate(data=data,len~supp+dose,FUN = mean)
+names(data_summary)<-c("Supplement Type","Dose","Len_Mean")
+data_summary$Len_Median<-aggregate(data=data,len~supp+dose,FUN = median)$len
+data_summary$Len_Std<-aggregate(data=data,len~supp+dose,FUN = sd)$len
+data_summary$Len_Var<-aggregate(data=data,len~supp+dose,FUN = var)$len
+data_summary
+```
+
+From this point, orange juice induces longer tooth comparing to VC for 0.5 or 1 mg/day. However, for 2mg/day, orange juice and VC are equaly powerful. Also, the intake dose of VC is positively correlated with tooth length.
+
+##3. Explotary Analysis
+
+Boxplots are generated to give an intuitive concept of the data
+
+```{r}
+figure <- ggplot(data, aes(x = dose, y = len, fill = supp))
+figure <- figure + geom_boxplot()
+figure <- figure + facet_grid(. ~ supp)
+figure<-figure+theme_bw(base_size = 20)+xlab("Dose(mg/day)")+ylab('Tooth Length')
+figure<-figure+guides(fill=guide_legend(title="Supplement type"))
+print(figure)
+```
+
+As shown in the graph, with higher dose, the tooth length increases. Also orange juice has better effects than vc for lower dose but almost the same for 2mg/day.
+
+##4. Hyopothesis Tests
+
+###4.1. Comparing Two Methods of Supplement
+
