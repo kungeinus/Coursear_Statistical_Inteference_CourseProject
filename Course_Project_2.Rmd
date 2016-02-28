@@ -2,7 +2,7 @@
 title: "Course_Project_2"
 author: "Zhenkun Guo"
 date: "February 27, 2016"
-output: pdf_document
+output: html_document
 ---
 
 ##1. Project Introduction
@@ -41,7 +41,7 @@ From this point, orange juice induces longer tooth comparing to VC for 0.5 or 1 
 
 Boxplots are generated to give an intuitive concept of the data
 
-```{r}
+```{r,fig.width=15,fig.height=10}
 figure <- ggplot(data, aes(x = dose, y = len, fill = supp))
 figure <- figure + geom_boxplot()
 figure <- figure + facet_grid(. ~ supp)
@@ -54,5 +54,85 @@ As shown in the graph, with higher dose, the tooth length increases. Also orange
 
 ##4. Hyopothesis Tests
 
-###4.1. Comparing Two Methods of Supplement
+###4.1. Comparing Different Intake Doses
 
+####4.1.1. For Orange Juise Method
+
+Comparing 0.5mg/day and 1mg/day
+
+```{r}
+t.test(len~dose,data = subset(data,dose %in% c(0.5,1) & supp=="OJ"))
+```
+
+p-value is 8E-5<<0.01 and the 95% confidence interval is all below 0. According to these results, we can conclue that 1mg/day has a stronger effect on tooth growth than 0.5mg/day.
+
+Then compare 1mg/day and 2mg/day
+
+```{r}
+t.test(len~dose,data = subset(data,dose %in% c(1,2) & supp=="OJ"))
+```
+
+p-value is 0.0392<0.05 and the 95% confidence interval is all below 0. According to these results, we can conclue that 2mg/day has a stronger effect on tooth growth than 1mg/day.However, the increasement of toolth growth is not as significant as the increasement from 0.5mg/day to 1mg/day. One possible explanation of the phenomenon is that the vitamin C can be absorbed within 2mg/day has exceeded the saturation limit.
+
+###4.1.2. For VC Method
+
+Comparing 0.5mg/day and 1mg/day
+
+```{r}
+t.test(len~dose,data = subset(data,dose %in% c(0.5,1) & supp=="VC"))
+```
+
+p-value is 6.8E-7<<0.01 and the 95% confidence interval is all below 0. According to these results, we can conclue that 1mg/day has a stronger effect on tooth growth than 0.5mg/day.
+
+Then compare 1mg/day and 2mg/day
+
+```{r}
+t.test(len~dose,data = subset(data,dose %in% c(1,2) & supp=="VC"))
+```
+
+p-value is 9E-5<<0.01 and the 95% confidence interval is all below 0. According to these results, we can conclue that 2mg/day has a stronger effect on tooth growth than 1mg/day.Different from orange juice method, the increasement between 2mg/day and 1mg/day is as significant as the increasement between 0.5mg/day and 1mg/day. Based on this fact, we can assume VC method reaches its absorption limit later than orange juice method.
+
+###4.2. Comparing Two Methods of Supplement
+
+Two samples t-test is performed between orange juice and vc supplement methods for each dose level.
+
+For 0.5mg/day
+
+```{r}
+t.test(len~supp,data = subset(data,dose==0.5))
+```
+
+p-value is 0.006<0.01 and the 95% confidence interval is all above 0. According to these results, we can conclude that orange juice as a supplement method has a stronger effect on tooth length than vc. 
+
+For 1mg/day
+
+```{r}
+t.test(len~supp,data = subset(data,dose==1))
+```
+
+p-value is 0.001<0.01 and the 95% confidence interval is all above 0. According to these results, we can conclude that orange juice as a supplement method has a stronger effect on tooth length than vc.
+
+For 2mg/day
+
+```{r}
+t.test(len~supp,data = subset(data,dose==2))
+```
+
+p-value is 0.9639 and the 95% confidence interval includes 0. According to these results, there is no significant evidence to say there is any difference between the two supplement methods.In other words, we can consider that the effects of the two supplement methods are the same.
+
+##5. Assumptions and Conclusions
+
+###5.1. Assumptions
+
+Any above or following statistical inference and conclusion is based on the following assumptions.
+
+1. All the pigs have the same or similar tooth length at the beginning before taking any Vitamin C.
+2. Vitamin C has the same effects on every pig for tooth growth.
+3. Besides Vitamin C, other feeding or raising conditions are the same for every pig involved.
+
+###5.2. Conclusions
+
+Based on the tests and analysis above, conclusion listed can be made:
+
+1. The tooth length is positively correlated to the dose of Vitamin C intake for both supplement methods. In other words, the higher dose of Vitamin C the longer tooth length will grow.
+2. Orange juice as a supplement method has stronger effects on tooth growth at low Vitamin C dose (0.5mg/day, 1mg/day) than vc but has similar effects for high dose (2mg/day). A possible explaination is that, only a certain portion of Vitamin C (usable Vitamin C) in Orange juice and vc can be absorbed and the portion of orange juice is higher than vc. The pigs have absoption limit and no more Vitamin C can be absorbed beyond this limit. When the pigs intake a high dose (2mg/day), the usable Vitamin C contained has exceeded the limit. That explains why orange juice and vc have similar effects at high dose.
