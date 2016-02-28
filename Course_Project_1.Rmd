@@ -1,8 +1,9 @@
 ---
-title: "Coursera Statistical Inference Project Part 1"
+title: Coursera Statistical Inference Project Part 1 - Check CLT with Simulation of
+  Exponential distribution
 author: "Zhenkun Guo"
 date: "February 27, 2016"
-output: html_document
+output: pdf_document
 ---
 ##1. Project Introduction
 
@@ -91,11 +92,13 @@ plotdata$the_y<-theoretical_density
 
 ###4.2. Making the Plot with ggplot2
 
-```{r,fig.width=15,fig.height=10}
+```{r,fig.width=17,fig.height=11}
 figure<-ggplot(plotdata)
 figure<-figure+geom_histogram(aes(x=sim,y=..density..), bins=30, colour="black",fill = "green")
-figure<-figure+geom_vline(aes(xintercept = mean(sim)), colour="magenta",size=1,linetype=1)
-figure<-figure+geom_text(aes(x=mean(sim)+1.6,label=paste("Simulated Sample Mean =",round(sd(sim),3))),y=0.53,size=7)
+figure<-figure+geom_vline(aes(xintercept = mean(sim),colour="sim"),size=1,linetype=1)
+figure<-figure+geom_text(aes(x=mean(sim)+1.6,label=paste("Simulated Sample Mean =",round(mean(sim),3))),y=0.53,size=7)
+figure<-figure+geom_vline(xintercept = 5, aes(colour="the"),size=1,linetype=1)
+figure<-figure+geom_text(aes(x=mean(sim)-1.2),label="Theoretical Mean= 5",y=0.53,size=7)
 figure<-figure+geom_line(aes(x=x,y=sim_y,color='sim'),linetype=1,size=1)
 figure<-figure+geom_line(aes(x=x,y=the_y,color='the'),linetype=1,size=1)
 figure<-figure+scale_colour_manual(name="Legend",values=c("sim"="red", "the"="blue"),labels=c("Simulated","Theoretical"))
@@ -108,7 +111,7 @@ figure<-figure+annotate("segment", x = conf_sim[1], xend = conf_sim[1], y = 0, y
                         colour = "red",size=1)
 figure<-figure+annotate("segment", x = conf_sim[2], xend = conf_sim[2], y = 0, yend = 0.1,
                         colour = "red",size=1)
-figure<-figure+geom_text(x = conf_sim[2]+1.1,y=0.12,size=7,label="95% Confidence Interval")
+figure<-figure+geom_text(x = conf_sim[2]+1.1,y=0.12,size=7,label="95% Confidence Interval 1.96S")
 print(figure)
 ``` 
 
